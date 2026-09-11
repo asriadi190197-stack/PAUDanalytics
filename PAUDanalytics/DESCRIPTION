@@ -1,0 +1,22 @@
+Package: PAUDanalytics
+Type: Package
+Title: Longitudinal PAUD Observation Analytics
+Version: 0.2.1
+Authors@R: person("PAUD", "Analytics", role = c("aut", "cre"), email = "example@example.com")
+Description: A Shiny application for longitudinal analysis of early childhood observation data across beginning, middle, and end of semester. It summarizes six STPPA-aligned developmental aspects, detects progress, stagnation and decline, maps results to Foundation Phase learning elements, and produces rule-based narrative reports.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports:
+    shiny,
+    shinydashboard,
+    readxl,
+    openxlsx,
+    DT,
+    dplyr,
+    tidyr,
+    ggplot2,
+    stringr,
+    scales,
+    officer
+RoxygenNote: 7.3.2
