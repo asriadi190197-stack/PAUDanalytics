@@ -1,12 +1,13 @@
 library(shiny)
 library(shinydashboard)
 
-# PAUDanalytics v0.4.0
+# PAUDanalytics v0.4.1
 # Modular application architecture.
 
 source(file.path("R", "config.R"), local = TRUE)
 source(file.path("R", "helpers.R"), local = TRUE)
 source(file.path("R", "demo_data.R"), local = TRUE)
+source(file.path("R", "theme.R"), local = TRUE)
 
 module_files <- list.files("modules", pattern = "\\.R$", full.names = TRUE)
 for (module_file in module_files) {
@@ -17,7 +18,7 @@ template_df <- make_demo_data()
 
 ui <- shinydashboard::dashboardPage(
   skin = "blue",
-  shinydashboard::dashboardHeader(title = "PAUDanalytics v0.4.0"),
+  shinydashboard::dashboardHeader(title = "PAUDanalytics v0.4.1"),
   shinydashboard::dashboardSidebar(
     shinydashboard::sidebarMenu(
       shinydashboard::menuItem("Beranda", tabName = "home", icon = shiny::icon("home")),
@@ -35,7 +36,7 @@ ui <- shinydashboard::dashboardPage(
   shinydashboard::dashboardBody(
     shiny::tags$head(
       shiny::tags$style(shiny::HTML(
-        ".content-wrapper{background:#f5f7fb}.box{border-radius:10px}.small-box h3{font-size:27px}.note{padding:12px;background:#fff8e8;border-left:4px solid #f39c12;border-radius:6px}.rec{padding:12px;margin-bottom:10px;background:white;border:1px solid #e5e7eb;border-radius:8px}"
+        ".content-wrapper{background:#F4F7FA}.main-header .logo{background:#17324D!important;font-weight:700}.main-header .navbar{background:#17324D!important}.main-sidebar{background:#142536!important}.sidebar-menu>li.active>a{border-left-color:#58B4AE!important;background:#1D364D!important}.box{border-radius:14px;border-top:0!important;box-shadow:0 8px 24px rgba(23,50,77,.08);overflow:hidden}.box-header{padding:14px 16px}.box-title{font-weight:700;color:#17324D}.small-box{border-radius:14px;box-shadow:0 8px 24px rgba(23,50,77,.08)}.small-box h3{font-size:27px}.content-header h1{color:#17324D;font-weight:700}.btn-primary,.btn-info{border:0;border-radius:8px}.note{padding:14px;background:#FFF9EE;border-left:4px solid #D7A84B;border-radius:8px}.rec{padding:14px;margin-bottom:10px;background:white;border:1px solid #E5EAF0;border-radius:10px}.dataTables_wrapper{font-size:13px}.form-control{border-radius:8px}.nav-tabs-custom,.well{border-radius:12px}"
       ))
     ),
     shinydashboard::tabItems(
@@ -53,7 +54,7 @@ ui <- shinydashboard::dashboardPage(
         shiny::fluidRow(
           shinydashboard::box(
             width = 12, title = "Tentang PAUDanalytics", status = "primary", solidHeader = TRUE,
-            shiny::h3("PAUDanalytics 0.4.0"),
+            shiny::h3("PAUDanalytics 0.4.1"),
             shiny::p("Versi modular untuk analisis observasi longitudinal PAUD."),
             shiny::p("Arsitektur aplikasi dipisahkan menjadi modul dashboard, data, kelas, profil anak, indikator, narasi, ekspor, dan pengaturan."),
             shiny::tags$div(

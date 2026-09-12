@@ -3,26 +3,20 @@ mod_cp_ui <- function(id) {
   shiny::tagList(
     shiny::fluidRow(
       shinydashboard::box(
-        width = 4, title = "Pilih Anak", status = "primary", solidHeader = TRUE,
-        shiny::selectInput(ns("child"), "Anak", choices = NULL),
-        shiny::p("Hasil enam aspek STPPA dipetakan ke tiga elemen CP Fase Fondasi.")
+        width = 4, title = "Capaian Pembelajaran", status = "primary", solidHeader = TRUE,
+        shiny::selectInput(ns("child"), "Pilih anak", choices = NULL),
+        shiny::p("Enam aspek STPPA dipetakan secara terintegrasi ke tiga elemen CP Fase Fondasi.")
       ),
       shinydashboard::box(
-        width = 8, title = "Perkembangan Berdasarkan CP", status = "info", solidHeader = TRUE,
-        shiny::plotOutput(ns("cp_trend"), height = 360)
+        width = 8, title = "Perjalanan CP Fase Fondasi", status = "info", solidHeader = TRUE,
+        shiny::plotOutput(ns("cp_trend"), height = 500)
       )
     ),
     shiny::fluidRow(
-      shinydashboard::box(
-        width = 12, title = "Ringkasan CP Fase Fondasi", status = "primary", solidHeader = TRUE,
-        DT::DTOutput(ns("cp_table"))
-      )
+      shinydashboard::box(width = 12, title = "Ringkasan CP", status = "primary", solidHeader = TRUE, DT::DTOutput(ns("cp_table")))
     ),
     shiny::fluidRow(
-      shinydashboard::box(
-        width = 12, title = "Pemetaan Indikator ke CP", status = "warning", solidHeader = TRUE,
-        DT::DTOutput(ns("mapping"))
-      )
+      shinydashboard::box(width = 12, title = "Pemetaan Indikator ke CP", status = "warning", solidHeader = TRUE, DT::DTOutput(ns("mapping")))
     )
   )
 }
@@ -38,14 +32,16 @@ mod_cp_server <- function(id, validated, cp_scores) {
 
     output$cp_trend <- shiny::renderPlot({
       shiny::req(input$child)
-      cp_scores() |>
-        dplyr::filter(id_anak == input$child) |>
-        ggplot2::ggplot(ggplot2::aes(periode, skor_cp, group = cp_elemen, linetype = cp_elemen)) +
-        ggplot2::geom_line(linewidth = 1.1) +
-        ggplot2::geom_point(size = 2.5) +
-        ggplot2::scale_y_continuous(limits = c(1, 4), breaks = 1:4) +
-        ggplot2::labs(x = NULL, y = "Skor CP", linetype = "Elemen CP") +
-        ggplot2::theme_minimal(base_size = 12)
+      d <- cp_scores() |> dplyr::filter(id_anak == input$child)
+      ggplot2::ggplot(d, ggplot2::aes(periode, skor_cp, group = 1)) +
+        ggplot2::geom_line(linewidth = 1.25, colour = paud_palette$blue) +
+        ggplot2::geom_point(size = 4.5, shape = 21, stroke = 1.2, fill = "white", colour = paud_palette$blue) +
+        ggplot2::geom_text(ggplot2::aes(label = sprintf("%.2f", skor_cp)), vjust = -1.15, fontface = "bold", colour = paud_palette$navy, size = 3.5) +
+        ggplot2::facet_wrap(~cp_elemen, ncol = 1) +
+        score_scale() +
+        ggplot2::labs(x = NULL, y = "Skor CP", subtitle = "Setiap elemen ditampilkan pada panel terpisah agar garis dan label tidak tumpang tindih.") +
+        paud_theme(base_size = 12) +
+        ggplot2::theme(legend.position = "none")
     })
 
     output$cp_table <- DT::renderDT({
@@ -54,7 +50,7 @@ mod_cp_server <- function(id, validated, cp_scores) {
         dplyr::filter(id_anak == input$child) |>
         dplyr::select(cp_elemen, periode, skor_cp, kategori) |>
         tidyr::pivot_wider(names_from = periode, values_from = c(skor_cp, kategori), names_sep = "__")
-      DT::datatable(tab, options = list(scrollX = TRUE), rownames = FALSE)
+      DT::datatable(tab, options = list(scrollX = TRUE, pageLength = 3), rownames = FALSE)
     })
 
     output$mapping <- DT::renderDT({

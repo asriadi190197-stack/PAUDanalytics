@@ -3,18 +3,18 @@ mod_child_ui <- function(id) {
   shiny::tagList(
     shiny::fluidRow(
       shinydashboard::box(
-        width = 3, title = "Pilih Anak", status = "primary", solidHeader = TRUE,
-        shiny::selectInput(ns("child"), "Anak", choices = NULL),
+        width = 3, title = "Profil Anak", status = "primary", solidHeader = TRUE,
+        shiny::selectInput(ns("child"), "Pilih anak", choices = NULL),
         shiny::uiOutput(ns("info"))
       ),
       shinydashboard::box(
-        width = 9, title = "Grafik Longitudinal 6 Aspek", status = "primary", solidHeader = TRUE,
-        shiny::plotOutput(ns("trend"), height = 400)
+        width = 9, title = "Perjalanan Perkembangan 6 Aspek", status = "primary", solidHeader = TRUE,
+        shiny::plotOutput(ns("trend"), height = 590)
       )
     ),
     shiny::fluidRow(
       shinydashboard::box(
-        width = 12, title = "Perubahan Awal → Akhir", status = "info", solidHeader = TRUE,
+        width = 12, title = "Ringkasan Perubahan Awal → Akhir", status = "info", solidHeader = TRUE,
         DT::DTOutput(ns("change_table"))
       )
     )
@@ -36,30 +36,47 @@ mod_child_server <- function(id, validated, aspect_scores, aspect_change) {
         dplyr::filter(id_anak == input$child) |>
         dplyr::slice(1)
       shiny::tagList(
-        shiny::h4(d$nama_anak),
-        shiny::p(paste("Kelompok:", d$kelompok)),
-        shiny::p(paste("Usia:", d$usia_bulan, "bulan"))
+        shiny::h4(style = "font-weight:700;color:#17324D", d$nama_anak),
+        shiny::p(shiny::tags$b("Kelompok: "), d$kelompok),
+        shiny::p(shiny::tags$b("Usia: "), format_age(suppressWarnings(as.numeric(d$usia_bulan))))
       )
     })
 
     output$trend <- shiny::renderPlot({
       shiny::req(input$child)
-      aspect_scores() |>
+      d <- aspect_scores() |>
         dplyr::filter(id_anak == input$child) |>
-        ggplot2::ggplot(ggplot2::aes(periode, skor_aspek, group = aspek, linetype = aspek)) +
-        ggplot2::geom_line(linewidth = 1.1) +
-        ggplot2::geom_point(size = 2.5) +
-        ggplot2::scale_y_continuous(limits = c(1, 4), breaks = 1:4) +
-        ggplot2::labs(x = NULL, y = "Skor aspek", linetype = "Aspek") +
-        ggplot2::theme_minimal(base_size = 12)
+        dplyr::mutate(aspek = factor(as.character(aspek), levels = aspect_order))
+
+      ggplot2::ggplot(d, ggplot2::aes(x = periode, y = skor_aspek, group = 1)) +
+        ggplot2::geom_line(linewidth = 1.25, colour = paud_palette$teal) +
+        ggplot2::geom_point(size = 4.4, shape = 21, stroke = 1.2, fill = "white", colour = paud_palette$teal) +
+        ggplot2::geom_text(
+          ggplot2::aes(label = sprintf("%.2f", skor_aspek)),
+          vjust = -1.15, size = 3.5, fontface = "bold", colour = paud_palette$navy
+        ) +
+        ggplot2::facet_wrap(~aspek, ncol = 2) +
+        score_scale() +
+        ggplot2::labs(
+          x = NULL, y = "Skor perkembangan",
+          subtitle = "Awal, tengah, dan akhir semester ditampilkan terpisah agar pola setiap aspek mudah dibaca."
+        ) +
+        paud_theme(base_size = 12) +
+        ggplot2::theme(legend.position = "none", axis.text.x = ggplot2::element_text(face = "bold"))
     })
 
     output$change_table <- DT::renderDT({
       shiny::req(input$child)
       tab <- aspect_change() |>
         dplyr::filter(id_anak == input$child) |>
-        dplyr::select(aspek, dplyr::contains("Awal Semester"), dplyr::contains("Akhir Semester"), delta, status)
-      DT::datatable(tab, options = list(scrollX = TRUE), rownames = FALSE)
+        dplyr::transmute(
+          Aspek = as.character(aspek),
+          Awal = round(.data[["skor_aspek__Awal Semester"]], 2),
+          Akhir = round(.data[["skor_aspek__Akhir Semester"]], 2),
+          Perubahan = round(delta, 2),
+          Status = status
+        )
+      DT::datatable(tab, options = list(dom = "t", pageLength = 6), rownames = FALSE)
     })
   })
 }
