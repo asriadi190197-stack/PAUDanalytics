@@ -1,6 +1,6 @@
-# PAUDanalytics 0.4.1
+# PAUDanalytics 0.4.2
 
-Versi 0.4.1 berfokus pada kualitas visual dan rapor perkembangan anak.
+Versi 0.4.2 berfokus pada kualitas visual dan rapor perkembangan anak.
 
 Perubahan utama:
 - Grafik longitudinal didesain ulang agar lebih besar, modern, dan tidak tumpang tindih.
@@ -17,3 +17,7 @@ Jalankan setelah instalasi:
 ```r
 PAUDanalytics::paudshiny()
 ```
+
+
+## v0.4.2
+Beranda menggunakan donut chart status perkembangan dan horizontal bar chart capaian akhir enam aspek. Grafik longitudinal dipusatkan di menu Perkembangan Kelas.

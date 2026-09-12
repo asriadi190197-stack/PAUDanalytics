@@ -1,13 +1,19 @@
-# Upgrade ke PAUDanalytics 0.4.1
+# Upgrade PAUDanalytics ke v0.4.2
 
-1. Salin seluruh isi ZIP pembaruan ke root repository PAUDanalytics lokal Anda dan pilih Replace/Merge.
-2. Di GitHub Desktop, isi Summary: `Improve visuals and report card v0.4.1`.
-3. Klik Commit to main, lalu Push origin.
-4. Di RStudio jalankan:
+Versi 0.4.2 memperbarui Beranda:
+
+- grafik garis dihapus dari Beranda;
+- ditambahkan donut chart status perkembangan (Meningkat/Stagnan/Menurun);
+- ditambahkan horizontal bar chart capaian akhir enam aspek;
+- grafik garis longitudinal tetap tersedia di menu **Perkembangan Kelas**.
+
+## Cara update
+
+1. Salin seluruh isi ZIP update ke root repository `PAUDanalytics` dan pilih Replace/Merge.
+2. Di GitHub Desktop: commit dengan pesan `Redesign home dashboard v0.4.2` lalu Push origin.
+3. Di RStudio jalankan:
 
 ```r
 remotes::install_github("asriadi190197-stack/PAUDanalytics", force = TRUE, upgrade = "never")
 PAUDanalytics::paudshiny()
 ```
-
-Uji terutama menu Profil Anak, CP, Perubahan Indikator, dan Ekspor Laporan.
