@@ -1,7 +1,7 @@
 library(shiny)
 library(shinydashboard)
 
-# PAUDanalytics v0.4.2
+# PAUDanalytics v0.4.3
 # Modular application architecture.
 
 source(file.path("R", "config.R"), local = TRUE)
@@ -18,7 +18,7 @@ template_df <- make_demo_data()
 
 ui <- shinydashboard::dashboardPage(
   skin = "blue",
-  shinydashboard::dashboardHeader(title = "PAUDanalytics v0.4.2"),
+  shinydashboard::dashboardHeader(title = "PAUDanalytics v0.4.3"),
   shinydashboard::dashboardSidebar(
     shinydashboard::sidebarMenu(
       shinydashboard::menuItem("Beranda", tabName = "home", icon = shiny::icon("home")),
@@ -54,9 +54,17 @@ ui <- shinydashboard::dashboardPage(
         shiny::fluidRow(
           shinydashboard::box(
             width = 12, title = "Tentang PAUDanalytics", status = "primary", solidHeader = TRUE,
-            shiny::h3("PAUDanalytics 0.4.2"),
-            shiny::p("Versi modular untuk analisis observasi longitudinal PAUD."),
-            shiny::p("Arsitektur aplikasi dipisahkan menjadi modul dashboard, data, kelas, profil anak, indikator, narasi, ekspor, dan pengaturan."),
+            shiny::h3("PAUDanalytics 0.4.3"),
+            shiny::p("Aplikasi analisis observasi longitudinal PAUD untuk mendukung pemantauan perkembangan anak, pemetaan STPPA, Capaian Pembelajaran Fase Fondasi, dan penyusunan rapor perkembangan."),
+            shiny::tags$hr(),
+            shiny::h4("Tentang Pengembang Aplikasi"),
+            shiny::tags$div(
+              style = "padding:18px;background:#F7FAFC;border:1px solid #E5EAF0;border-radius:12px;margin-bottom:16px;",
+              shiny::h4("DR. Muh. Asriadi AM, M.Pd.", style = "margin-top:0;color:#17324D;font-weight:700;"),
+              shiny::p(shiny::tags$strong("Afiliasi: "), "Dosen UPI Kampus Cibiru"),
+              shiny::p(shiny::tags$strong("Email: "), shiny::tags$a(href = "mailto:muhasriadi@upi.edu", "muhasriadi@upi.edu")),
+              shiny::p("Pengembang PAUDanalytics.", style = "margin-bottom:0;color:#5D6B78;")
+            ),
             shiny::tags$div(
               class = "note",
               shiny::tags$strong("Catatan metodologis: "),

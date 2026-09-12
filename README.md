@@ -1,3 +1,11 @@
+# PAUDanalytics 0.4.3
+
+Pembaruan identitas pengembang aplikasi.
+
+**Pengembang:** DR. Muh. Asriadi AM, M.Pd.  
+**Afiliasi:** Dosen UPI Kampus Cibiru  
+**Email:** muhasriadi@upi.edu
+
 # PAUDanalytics 0.4.2
 
 Versi 0.4.2 berfokus pada kualitas visual dan rapor perkembangan anak.
