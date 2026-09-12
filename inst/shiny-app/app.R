@@ -1,7 +1,7 @@
 library(shiny)
 library(shinydashboard)
 
-# PAUDanalytics v0.3.1
+# PAUDanalytics v0.4.0
 # Modular application architecture.
 
 source(file.path("R", "config.R"), local = TRUE)
@@ -17,13 +17,14 @@ template_df <- make_demo_data()
 
 ui <- shinydashboard::dashboardPage(
   skin = "blue",
-  shinydashboard::dashboardHeader(title = "PAUDanalytics v0.3.1"),
+  shinydashboard::dashboardHeader(title = "PAUDanalytics v0.4.0"),
   shinydashboard::dashboardSidebar(
     shinydashboard::sidebarMenu(
       shinydashboard::menuItem("Beranda", tabName = "home", icon = shiny::icon("home")),
       shinydashboard::menuItem("Data Longitudinal", tabName = "data", icon = shiny::icon("file-excel")),
       shinydashboard::menuItem("Perkembangan Kelas", tabName = "class", icon = shiny::icon("chart-line")),
       shinydashboard::menuItem("Profil Anak", tabName = "child", icon = shiny::icon("child")),
+      shinydashboard::menuItem("Capaian Pembelajaran (CP)", tabName = "cp", icon = shiny::icon("book-open")),
       shinydashboard::menuItem("Perubahan Indikator", tabName = "indicator", icon = shiny::icon("magnifying-glass-chart")),
       shinydashboard::menuItem("Narasi & Rekomendasi", tabName = "narrative", icon = shiny::icon("file-lines")),
       shinydashboard::menuItem("Ekspor Laporan", tabName = "export", icon = shiny::icon("download")),
@@ -42,6 +43,7 @@ ui <- shinydashboard::dashboardPage(
       shinydashboard::tabItem(tabName = "data", mod_data_ui("data")),
       shinydashboard::tabItem(tabName = "class", mod_class_ui("class")),
       shinydashboard::tabItem(tabName = "child", mod_child_ui("child")),
+      shinydashboard::tabItem(tabName = "cp", mod_cp_ui("cp")),
       shinydashboard::tabItem(tabName = "indicator", mod_indicator_ui("indicator")),
       shinydashboard::tabItem(tabName = "narrative", mod_narrative_ui("narrative")),
       shinydashboard::tabItem(tabName = "export", mod_export_ui("export")),
@@ -51,7 +53,7 @@ ui <- shinydashboard::dashboardPage(
         shiny::fluidRow(
           shinydashboard::box(
             width = 12, title = "Tentang PAUDanalytics", status = "primary", solidHeader = TRUE,
-            shiny::h3("PAUDanalytics 0.3.1"),
+            shiny::h3("PAUDanalytics 0.4.0"),
             shiny::p("Versi modular untuk analisis observasi longitudinal PAUD."),
             shiny::p("Arsitektur aplikasi dipisahkan menjadi modul dashboard, data, kelas, profil anak, indikator, narasi, ekspor, dan pengaturan."),
             shiny::tags$div(
@@ -109,6 +111,15 @@ server <- function(input, output, session) {
       )
   })
 
+
+  cp_scores <- shiny::reactive({
+    cfg <- settings()
+    long_indicator() |>
+      dplyr::group_by(id_anak, nama_anak, kelompok, usia_bulan, periode, cp_elemen) |>
+      dplyr::summarise(skor_cp = mean(skor, na.rm = TRUE), .groups = "drop") |>
+      dplyr::mutate(kategori = category_code(skor_cp, cfg$cut_bb, cfg$cut_mb, cfg$cut_bsh))
+  })
+
   status_from_delta <- function(delta) {
     cfg <- settings()
     dplyr::case_when(
@@ -157,9 +168,10 @@ server <- function(input, output, session) {
   mod_home_server("home", validated, aspect_scores, aspect_change)
   mod_class_server("class", aspect_scores, aspect_change)
   mod_child_server("child", validated, aspect_scores, aspect_change)
+  mod_cp_server("cp", validated, cp_scores)
   mod_indicator_server("indicator", validated, long_indicator, indicator_change)
   mod_narrative_server("narrative", validated, aspect_scores, aspect_change)
-  mod_export_server("export", validated, aspect_scores, aspect_change, indicator_change)
+  mod_export_server("export", validated, aspect_scores, aspect_change, indicator_change, cp_scores)
 }
 
 shiny::shinyApp(ui, server)

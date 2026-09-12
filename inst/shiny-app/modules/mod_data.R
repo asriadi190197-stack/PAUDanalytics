@@ -7,7 +7,7 @@ mod_data_ui <- function(id) {
         shiny::fileInput(ns("file"), "Upload Excel / CSV", accept = c(".xlsx", ".xls", ".csv")),
         shiny::downloadButton(ns("download_template"), "Unduh Template Longitudinal"),
         shiny::checkboxInput(ns("use_demo"), "Gunakan data contoh", TRUE),
-        shiny::helpText("Kolom wajib: id_anak, nama_anak, kelompok, usia_bulan, periode, dan indikator.")
+        shiny::helpText("Kolom inti: id_anak, nama_anak, kelompok, usia_bulan, periode, dan indikator. Template v0.4.0 juga memuat nama_sekolah, npsn, tahun_ajaran, dan semester untuk rapor.")
       ),
       shinydashboard::box(
         width = 8, title = "Preview Data", status = "primary", solidHeader = TRUE,
@@ -56,6 +56,7 @@ mod_data_server <- function(id, template_df) {
         petunjuk <- data.frame(
           Petunjuk = c(
             "Satu baris = satu anak pada satu periode.",
+            "Isi identitas sekolah pada nama_sekolah, npsn, tahun_ajaran, dan semester agar muncul di rapor.",
             "Gunakan periode persis: Awal Semester, Tengah Semester, Akhir Semester.",
             "Skor default indikator 1-4.",
             "Jangan mengubah kode indikator tanpa menyesuaikan aplikasi."

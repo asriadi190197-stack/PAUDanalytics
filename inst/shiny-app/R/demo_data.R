@@ -1,6 +1,10 @@
 make_demo_data <- function() {
-  set.seed(20260911)
+  set.seed(20260912)
   children <- data.frame(
+    nama_sekolah = rep("PAUD Contoh Harapan Bangsa", 8),
+    npsn = rep("12345678", 8),
+    tahun_ajaran = rep("2026/2027", 8),
+    semester = rep("Ganjil", 8),
     id_anak = sprintf("A%03d", 1:8),
     nama_anak = c("Aisyah", "Bima", "Citra", "Damar", "Elina", "Faris", "Gita", "Hana"),
     kelompok = rep("B", 8),

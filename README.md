@@ -1,33 +1,24 @@
-# PAUDanalytics 0.3.0
+# PAUDanalytics 0.4.0
 
-PAUDanalytics is a modular R Shiny application for longitudinal PAUD observation analysis.
+PAUDanalytics is an R Shiny application for longitudinal early-childhood observation analytics.
 
-## Install from GitHub
+Version 0.4.0 adds:
+
+- report-card style Word (.docx) output;
+- school and child identity fields in the template;
+- explicit Capaian Pembelajaran (CP) Fase Fondasi menu;
+- longitudinal CP summaries mapped from six STPPA-aligned aspects;
+- Word report sections for identity, CP, six STPPA aspects, narrative, recommendations, teacher notes, and signatures.
+
+## Run
 
 ```r
-install.packages("remotes")
-remotes::install_github("asriadi190197-stack/PAUDanalytics")
 PAUDanalytics::paudshiny()
 ```
 
-After installation, launch with:
+## Update from GitHub
 
 ```r
+remotes::install_github("asriadi190197-stack/PAUDanalytics", force = TRUE, upgrade = "never")
 PAUDanalytics::paudshiny()
 ```
-
-## Version 0.3.0
-
-The application source has been refactored into modules so new features can be added without expanding one very large `app.R` file.
-
-Main app modules:
-- Dashboard / home
-- Longitudinal data input
-- Class development
-- Child profile
-- Indicator change
-- Narrative and recommendations
-- Export
-- Settings
-
-Operational indicators in the application are editable analytic examples aligned to the six STPPA areas; they are not presented as a verbatim official indicator list.

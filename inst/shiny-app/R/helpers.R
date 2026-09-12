@@ -129,3 +129,19 @@ make_narrative <- function(child, aspect_change) {
 
   paste0(sentence1, sentence2, sentence3, sentence4)
 }
+
+format_age <- function(months) {
+  if (length(months) == 0 || is.na(months[1])) return("-")
+  m <- as.integer(months[1])
+  paste0(m %/% 12, " tahun ", m %% 12, " bulan")
+}
+
+cp_narrative <- function(cp_name, final_score, final_cat) {
+  if (is.na(final_score) || is.na(final_cat)) return("Data belum memadai untuk menyusun narasi CP.")
+  level <- category_long(final_cat)
+  paste0(
+    "Pada elemen CP ", cp_name, ", capaian akhir berada pada kategori ", level,
+    " dengan skor rata-rata ", sprintf("%.2f", final_score),
+    ". Hasil ini perlu dibaca bersama bukti autentik hasil observasi, catatan anekdot, hasil karya, dan konteks keseharian anak."
+  )
+}
