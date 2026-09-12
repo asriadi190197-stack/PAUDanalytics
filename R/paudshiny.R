@@ -1,11 +1,13 @@
 #' Run PAUDanalytics Shiny Application
 #'
-#' Launches the longitudinal PAUD observation analytics dashboard.
+#' Launches the PAUDanalytics longitudinal observation application.
 #'
-#' @return A running Shiny application.
+#' @return No return value. The Shiny application is launched.
 #' @export
 paudshiny <- function() {
   app_dir <- system.file("shiny-app", package = "PAUDanalytics")
-  if (app_dir == "") stop("Shiny application files were not found.")
+  if (identical(app_dir, "")) {
+    stop("PAUDanalytics Shiny application files were not found.", call. = FALSE)
+  }
   shiny::runApp(app_dir, display.mode = "normal")
 }
