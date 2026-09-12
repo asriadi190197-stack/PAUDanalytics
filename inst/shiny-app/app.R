@@ -1,7 +1,7 @@
 library(shiny)
 library(shinydashboard)
 
-# PAUDanalytics v0.3.0
+# PAUDanalytics v0.3.1
 # Modular application architecture.
 
 source(file.path("R", "config.R"), local = TRUE)
@@ -9,13 +9,15 @@ source(file.path("R", "helpers.R"), local = TRUE)
 source(file.path("R", "demo_data.R"), local = TRUE)
 
 module_files <- list.files("modules", pattern = "\\.R$", full.names = TRUE)
-invisible(lapply(module_files, source, local = TRUE))
+for (module_file in module_files) {
+  source(module_file, local = TRUE)
+}
 
 template_df <- make_demo_data()
 
 ui <- shinydashboard::dashboardPage(
   skin = "blue",
-  shinydashboard::dashboardHeader(title = "PAUDanalytics v0.3.0"),
+  shinydashboard::dashboardHeader(title = "PAUDanalytics v0.3.1"),
   shinydashboard::dashboardSidebar(
     shinydashboard::sidebarMenu(
       shinydashboard::menuItem("Beranda", tabName = "home", icon = shiny::icon("home")),
@@ -49,7 +51,7 @@ ui <- shinydashboard::dashboardPage(
         shiny::fluidRow(
           shinydashboard::box(
             width = 12, title = "Tentang PAUDanalytics", status = "primary", solidHeader = TRUE,
-            shiny::h3("PAUDanalytics 0.3.0"),
+            shiny::h3("PAUDanalytics 0.3.1"),
             shiny::p("Versi modular untuk analisis observasi longitudinal PAUD."),
             shiny::p("Arsitektur aplikasi dipisahkan menjadi modul dashboard, data, kelas, profil anak, indikator, narasi, ekspor, dan pengaturan."),
             shiny::tags$div(
